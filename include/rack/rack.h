@@ -53,12 +53,12 @@ extern "C"
 	EXPORTED const char* rack_get_api_version();
 
 	// get the module name. the combination of module name and module version should be
-	// unique to the vendor (as specified by racK_get_module_vendor())
+	// unique to the vendor (as specified by rack_get_module_vendor())
 	/// @return the module name
 	EXPORTED const char* rack_get_module_name();
 
 	// get the module version. the combination of module name and module version should be
-	// unique to the vendor (as specified by racK_get_module_vendor())
+	// unique to the vendor (as specified by rack_get_module_vendor())
 	// @return the module version
 	EXPORTED const char* rack_get_module_version();
 
