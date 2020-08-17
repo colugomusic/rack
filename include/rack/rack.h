@@ -25,9 +25,22 @@ A UNIT is an audio processor which consists of:
 ┃ ┃ ┗━━━━━━━━━┛ ┗━━━━━━━━━┛         ┃ ┃ ┗━━━━━━━━━┛ ┗━━━━━━━━━┛         ┃ ... ┃
 ┃ ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛     ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+Module implementers must not perform unbounded operations inside rack_unit_process().
+
+Examples of unbounded operations include:
+ - Memory allocation / deallocation
+ - I/O (e.g. printf())
+ - Context switching (e.g. exec(), yield())
+ - Mutex operations
+
 */
+
+// modules should return this from rack_get_api_version()
 #define RACK_API_VERSION "0.0.1"
 
+// returned from rack_param_get_format_hint(), indicating the type of a parameter.
+// hosts are free to ignore this hint
 enum Rack_ParamFormatHint
 {
     Rack_ParamFormatHint_Float = 0,
@@ -71,9 +84,9 @@ extern "C"
 	/// @return the number of units exposed by this module
 	EXPORTED int rack_get_num_units();
 
-	/// @param id the id of the unit to make. valid ids are 0..(n-1) where n is the number
+	/// @param id the id of the unit to create. valid ids are 0..(n-1) where n is the number
 	/// returned from rack_get_num_units()
-	/// @return the unit
+	/// @return a handle to the new unit instance
 	EXPORTED void* rack_unit_make(int id);
 
 	/// free the specified unit. 
@@ -144,10 +157,26 @@ extern "C"
 	/// @param handle the parameter
 	/// @return the name of the parameter
 	EXPORTED const char* rack_param_get_name(void* handle);
+
+	/// @param handle the parameter
+	/// @param value the new value for the parameter
 	EXPORTED void rack_param_set_value(void* handle, float value);
+
+	/// @param handle the parameter
+	/// @return the current value of the parameter
 	EXPORTED float rack_param_get_value(void* handle);
+
+	/// @param handle the parameter
+	/// @return a Rack_ParamFormatHint enum value indicating the type of the parameter. 
+	/// hosts are free to ignore this hint
 	EXPORTED Rack_ParamFormatHint rack_param_get_format_hint(void* handle);
+
+	/// @param handle the parameter
+	/// @return the minimum value for the parameter. hosts are free to exceed this limit.
 	EXPORTED float rack_param_get_min(void* handle);
+
+	/// @param handle the parameter
+	/// @return the maximum value for the parameter. hosts are free to exceed this limit.
 	EXPORTED float rack_param_get_max(void* handle);
 
 	/// @param handle the channel
