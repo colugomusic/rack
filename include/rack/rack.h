@@ -173,7 +173,7 @@ extern "C"
 
 	/// @param handle the parameter
 	/// @return a value indicating the size of the parameter.
-	///		1.0 = full size 
+	/// 	1.0 = full size 
 	/// 	0.5 = half size 
 	/// 	2.0 = double size 
 	/// hosts are free to ignore this hint
