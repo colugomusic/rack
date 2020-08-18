@@ -180,12 +180,20 @@ extern "C"
 	EXPORTED float rack_param_get_size_hint(void* handle);
 
 	/// @param handle the parameter
-	/// @return the minimum value for the parameter. hosts are free to exceed this limit.
+	/// @return the minimum value for the parameter. hosts must not exceed this limit.
 	EXPORTED float rack_param_get_min(void* handle);
 
 	/// @param handle the parameter
-	/// @return the maximum value for the parameter. hosts are free to exceed this limit.
+	/// @return the maximum value for the parameter. hosts must not exceed this limit.
 	EXPORTED float rack_param_get_max(void* handle);
+
+	/// get the name of a switch option when rack_param_get_format_hint() returns
+	/// Rack_ParamFormatHint_Switch. valid ids are 0..n where n is the value returned
+	/// from rack_param_get_max()
+	/// @param handle the parameter
+	/// @param id the id of the switch option
+	/// @return the name of the switch option
+	EXPORTED const char* rack_param_get_switch_option_name(void* handle, int id);
 
 	/// @param handle the channel
 	/// @return the name of the channel
