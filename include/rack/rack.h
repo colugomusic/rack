@@ -173,9 +173,9 @@ extern "C"
 
 	/// @param handle the parameter
 	/// @return a value indicating the size of the parameter.
-	///	1.0 = full size 
-	/// 0.5 = half size 
-	/// 2.0 = double size 
+	///		1.0 = full size 
+	/// 	0.5 = half size 
+	/// 	2.0 = double size 
 	/// hosts are free to ignore this hint
 	EXPORTED float rack_param_get_size_hint(void* handle);
 
@@ -221,12 +221,12 @@ extern "C"
 	/// this can be used to read or write interleaved channel data to or from a single
 	/// memory buffer, e.g.
 	///
-	/// 	input_data =
+	/// 	const float* input_data =
 	/// 	 ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓
 	/// 	 ┃ L ┃ R ┃ L ┃ R ┃ L ┃ R ┃ ... etc
 	/// 	 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
 	/// 	rack_channel_set_input_buffer(input_left_channel, input_data);
-	/// 	rack_channel_set_input_buffer(input_right_channel, input_data);
+	/// 	rack_channel_set_input_buffer(input_right_channel, input_data + 1);
 	/// 	rack_channel_set_buffer_stride(input_left_channel, 2);
 	/// 	rack_channel_set_buffer_stride(input_right_channel, 2);
 	///
