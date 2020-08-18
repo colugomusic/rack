@@ -230,7 +230,7 @@ extern "C"
 	/// memory buffer, e.g.
 	///
 	/// 	const float* input_data =
-	/// 	 ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓
+	/// 	 ┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓
 	/// 	 ┃ L ┃ R ┃ L ┃ R ┃ L ┃ R ┃ ... etc
 	/// 	 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
 	/// 	rack_channel_set_input_buffer(input_left_channel, input_data);
