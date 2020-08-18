@@ -44,10 +44,12 @@ Examples of unbounded operations include:
 enum Rack_ParamFormatHint
 {
     Rack_ParamFormatHint_Float = 0,
-    Rack_ParamFormatHint_Hertz = 1,
-    Rack_ParamFormatHint_Percentage = 2,
-    Rack_ParamFormatHint_Toggle = 3,
-    Rack_ParamFormatHint_Switch = 4,
+	Rack_ParamFormatHint_Int = 1,
+    Rack_ParamFormatHint_Hertz = 2,
+    Rack_ParamFormatHint_Percentage = 3,
+	Rack_ParamFormatHint_Milliseconds = 4,
+    Rack_ParamFormatHint_Toggle = 5,
+    Rack_ParamFormatHint_Switch = 6,
 };
 
 #ifdef RACK_EXPORT_MODULE
