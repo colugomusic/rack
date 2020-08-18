@@ -182,12 +182,61 @@ extern "C"
 	/// @param handle the channel
 	/// @return the name of the channel
 	EXPORTED const char* rack_channel_get_name(void* handle);
-	EXPORTED void rack_channel_set_buffer_stride(void* handle, int stride);
-	EXPORTED int rack_channel_get_buffer_stride(void* handle);
+
+	/// if the specified channel is an input channel, set the buffer from which data will
+	/// be read in rack_unit_process(). 
+	/// it is the host's responsibility to ensure that the buffer contains at least
+	/// num_frames values and to ensure that the buffer stays alive for the duration of
+	/// rack_unit_process(). 
+	/// an input channel can be disabled by setting the input buffer to null. modules
+	/// must support any configuration of enabled/disabled channels
+	/// @param handle the channel
+	/// @return 0 if the specified channel is not an input channel. otherwise 1.
 	EXPORTED char rack_channel_set_input_buffer(void* handle, const float* in);
-	EXPORTED const float* rack_channel_get_input_buffer(void* handle);
+
+	/// if the specified channel is an output channel, set the buffer to which data will
+	/// be written in rack_unit_process(). 
+	/// it is the host's responsibility to ensure that the buffer is large enought to
+	/// hold at least num_frames values and to ensure that the buffer stays alive for the
+	/// duration of rack_unit_process() 
+	/// an output channel can be disabled by setting the output buffer to null. modules
+	/// must support any configuration of enabled/disabled channels
+	/// @param handle the channel
+	/// @return 0 if the specified channel is not an output channel. otherwise 1.
 	EXPORTED char rack_channel_set_output_buffer(void* handle, float* out);
-	EXPORTED const float* rack_channel_get_output_buffer(void* handle);
+
+	/// specify the stride offset between consecutive frames. modules should use this
+	/// to calculate indices into the specified buffer when reading or writing frames.
+	///
+	/// by default this is set to 1. 
+	///
+	/// this can be used to read or write interleaved channel data to or from a single
+	/// memory buffer, e.g.
+	///
+	/// 	input_data =
+	/// 	 ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓
+	/// 	 ┃ L ┃ R ┃ L ┃ R ┃ L ┃ R ┃ ... etc
+	/// 	 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
+	/// 	rack_channel_set_input_buffer(input_left_channel, input_data);
+	/// 	rack_channel_set_input_buffer(input_right_channel, input_data);
+	/// 	rack_channel_set_buffer_stride(input_left_channel, 2);
+	/// 	rack_channel_set_buffer_stride(input_right_channel, 2);
+	///
+	/// @param handle the channel
+	/// @param stride offset between consecutive frames
+	EXPORTED void rack_channel_set_buffer_stride(void* handle, int stride);
+
+	/// @param handle the channel
+	/// @return the current buffer stride for this channel
+	EXPORTED int rack_channel_get_buffer_stride(void* handle);
+
+	/// @param handle the channel
+	/// @return the current input buffer for this channel
+	EXPORTED const float* rack_channel_get_input_buffer(void* handle);
+
+	/// @param handle the channel
+	/// @return the current output buffer for this channel
+	EXPORTED float* rack_channel_get_output_buffer(void* handle);
 
 	/// @param handle the trigger
 	/// @return the name of the trigger
