@@ -48,8 +48,9 @@ enum Rack_ParamFormatHint
 	Rack_ParamFormatHint_Hertz = 2,
 	Rack_ParamFormatHint_Percentage = 3,
 	Rack_ParamFormatHint_Milliseconds = 4,
-    Rack_ParamFormatHint_Toggle = 5,
-	Rack_ParamFormatHint_Switch = 6,
+	Rack_ParamFormatHint_Decibels = 5,
+    Rack_ParamFormatHint_Toggle = 6,
+	Rack_ParamFormatHint_Switch = 7,
 };
 
 #ifdef RACK_EXPORT_MODULE
