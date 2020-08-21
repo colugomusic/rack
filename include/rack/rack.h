@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿
+#pragma once
 
 /*
 A RACK MODULE is a shared library which implements the C interface listed below.
@@ -168,6 +169,10 @@ extern "C"
 	/// @param handle the parameter
 	/// @return the current value of the parameter
 	EXPORTED float rack_param_get_value(void* handle);
+
+	/// @param handle the parameter
+	/// @return the default value for the parameter
+	EXPORTED float rack_param_get_default_value(void* handle);
 
 	/// @param handle the parameter
 	/// @return a Rack_ParamFormatHint enum value indicating the type of the parameter. 
