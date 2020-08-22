@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 /*
 A RACK MODULE is a shared library which implements the C interface listed below.
@@ -27,9 +26,15 @@ A UNIT is an audio processor which consists of:
 ┃ ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛     ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-Module implementers must not perform unbounded operations inside rack_unit_process().
+Functions marked with [no-audio] should be considered by hosts to be unsafe to call
+from an audio processing thread.
 
-Examples of unbounded operations include:
+Any function not marked with [no-audio] should be considered to be "audio-safe".
+
+it is the module implementer's responsibility to ensure that audio-safe functions
+do not perform any operations which may take an unbounded amount of time to execute.
+
+Examples of such operations include:
  - Memory allocation / deallocation
  - I/O (e.g. printf())
  - Context switching (e.g. exec(), yield())
@@ -88,11 +93,13 @@ extern "C"
 	/// @return the number of units exposed by this module
 	EXPORTED int rack_get_num_units();
 
+	/// [no-audio]
 	/// @param id the id of the unit to create. valid ids are 0..(n-1) where n is the number
 	/// returned from rack_get_num_units()
 	/// @return a handle to the new unit instance
 	EXPORTED void* rack_unit_make(int id);
 
+	/// [no-audio]
 	/// free the specified unit. 
 	/// it is the host's responsibility to ensure that the unit is not currently being 
 	/// processed by any thread
@@ -157,6 +164,25 @@ extern "C"
 	/// number returned from rack_unit_get_num_triggers
 	/// @return the trigger
 	EXPORTED void* rack_unit_get_trigger(void* handle, int id);
+
+	/// copy state from one unit to another.
+	/// something like this must produce an uninterrupted signal, as if a single unit
+	/// were being processed:
+	///
+	///		rack_unit_process(unit_a, 32);
+	///		rack_unit_copy(unit_b, unit_a);
+	///		rack_unit_process(unit_b, 32);
+	///
+	/// only audio state and parameter values are affected.
+	///
+	/// @param dest the unit to copy data into
+	/// @param source the unit to copy data from
+	/// @return 0 if \p dest and \p source are not copy-compatible units, otherwise 1
+	EXPORTED char rack_unit_copy(void* dest, void* source);
+
+	/// reset the unit back to its initial state
+	/// @param handle the unit
+	EXPORTED void rack_unit_reset(void* handle);
 
 	/// @param handle the parameter
 	/// @return the name of the parameter
