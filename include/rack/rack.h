@@ -40,6 +40,10 @@ Examples of such operations include:
  - Context switching (e.g. exec(), yield())
  - Mutex operations
 
+ In lieu of MIDI support, if a unit exposes a trigger with the name "_reset", hosts
+can fire it whenever a MIDI note-on event might be fired. This interaction will be
+removed from rack when MIDI support is added.
+
 */
 
 // modules should return this from rack_get_api_version()
