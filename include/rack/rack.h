@@ -40,10 +40,6 @@ Examples of such operations include:
  - Context switching (e.g. exec(), yield())
  - Mutex operations
 
- In lieu of MIDI support, if a unit exposes a trigger with the name "_reset", hosts
-can fire it whenever a MIDI note-on event might be fired. This interaction will be
-removed from rack when MIDI support is added.
-
 */
 
 // modules should return this from rack_get_api_version()
@@ -184,7 +180,10 @@ extern "C"
 	/// @return 0 if \p dest and \p source are not copy-compatible units, otherwise 1
 	EXPORTED char rack_unit_copy(void* dest, void* source);
 
-	/// reset the unit back to its initial state
+	/// reset the unit's audio data back to its initial state.
+	/// this does not include resetting parameters back to their default values.
+	/// the unit should continue processing as if it was initialized with the current
+	/// parameter values.
 	/// @param handle the unit
 	EXPORTED void rack_unit_reset(void* handle);
 
