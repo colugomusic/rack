@@ -55,7 +55,7 @@ enum Rack_ParamFormatHint
 	Rack_ParamFormatHint_Percentage = 3,
 	Rack_ParamFormatHint_Milliseconds = 4,
 	Rack_ParamFormatHint_Decibels = 5,
-    Rack_ParamFormatHint_Toggle = 6,
+	Rack_ParamFormatHint_Toggle = 6,
 	Rack_ParamFormatHint_Switch = 7,
 };
 
@@ -249,7 +249,7 @@ extern "C"
 
 	/// if the specified channel is an output channel, set the buffer to which data will
 	/// be written in rack_unit_process(). 
-	/// it is the host's responsibility to ensure that the buffer is large enought to
+	/// it is the host's responsibility to ensure that the buffer is large enough to
 	/// hold at least num_frames values and to ensure that the buffer stays alive for the
 	/// duration of rack_unit_process() 
 	/// an output channel can be disabled by setting the output buffer to null. modules
@@ -258,8 +258,8 @@ extern "C"
 	/// @return 0 if the specified channel is not an output channel. otherwise 1.
 	EXPORTED char rack_channel_set_output_buffer(void* handle, float* out);
 
-	/// specify the stride offset between consecutive frames. modules should use this
-	/// to calculate indices into the specified buffer when reading or writing frames.
+	/// specify the stride between consecutive frames. modules should use this to
+	/// calculate indices into the specified buffer when reading or writing frames.
 	///
 	/// by default this is set to 1. 
 	///
@@ -276,7 +276,7 @@ extern "C"
 	/// 	rack_channel_set_buffer_stride(input_right_channel, 2);
 	///
 	/// @param handle the channel
-	/// @param stride offset between consecutive frames
+	/// @param stride between consecutive frames
 	EXPORTED void rack_channel_set_buffer_stride(void* handle, int stride);
 
 	/// @param handle the channel
