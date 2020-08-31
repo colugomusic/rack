@@ -165,28 +165,6 @@ extern "C"
 	/// @return the trigger
 	EXPORTED void* rack_unit_get_trigger(void* handle, int id);
 
-	/// copy state from one unit to another.
-	/// something like this must produce an uninterrupted signal, as if a single unit
-	/// were being processed:
-	///
-	///		rack_unit_process(unit_a, 32);
-	///		rack_unit_copy(unit_b, unit_a);
-	///		rack_unit_process(unit_b, 32);
-	///
-	/// only audio state and parameter values are affected.
-	///
-	/// @param dest the unit to copy data into
-	/// @param source the unit to copy data from
-	/// @return 0 if \p dest and \p source are not copy-compatible units, otherwise 1
-	EXPORTED char rack_unit_copy(void* dest, void* source);
-
-	/// reset the unit's audio data back to its initial state.
-	/// this does not include resetting parameters back to their default values.
-	/// the unit should continue processing as if it was initialized with the current
-	/// parameter values.
-	/// @param handle the unit
-	EXPORTED void rack_unit_reset(void* handle);
-
 	/// @param handle the parameter
 	/// @return the name of the parameter
 	EXPORTED const char* rack_param_get_name(void* handle);
@@ -257,31 +235,6 @@ extern "C"
 	/// @param handle the channel
 	/// @return 0 if the specified channel is not an output channel. otherwise 1.
 	EXPORTED char rack_channel_set_output_buffer(void* handle, float* out);
-
-	/// specify the stride between consecutive frames. modules should use this to
-	/// calculate indices into the specified buffer when reading or writing frames.
-	///
-	/// by default this is set to 1. 
-	///
-	/// this can be used to read or write interleaved channel data to or from a single
-	/// memory buffer, e.g.
-	///
-	/// 	const float* input_data =
-	/// 	 ┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓
-	/// 	 ┃ L ┃ R ┃ L ┃ R ┃ L ┃ R ┃ ... etc
-	/// 	 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
-	/// 	rack_channel_set_input_buffer(input_left_channel, input_data);
-	/// 	rack_channel_set_input_buffer(input_right_channel, input_data + 1);
-	/// 	rack_channel_set_buffer_stride(input_left_channel, 2);
-	/// 	rack_channel_set_buffer_stride(input_right_channel, 2);
-	///
-	/// @param handle the channel
-	/// @param stride between consecutive frames
-	EXPORTED void rack_channel_set_buffer_stride(void* handle, int stride);
-
-	/// @param handle the channel
-	/// @return the current buffer stride for this channel
-	EXPORTED int rack_channel_get_buffer_stride(void* handle);
 
 	/// @param handle the channel
 	/// @return the current input buffer for this channel
