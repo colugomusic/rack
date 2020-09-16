@@ -169,9 +169,20 @@ extern "C"
 	/// @return the name of the parameter
 	EXPORTED const char* rack_param_get_name(void* handle);
 
+	/// set a static value for the parameter
+	/// ignored if a value buffer is set with rack_param_set_value_buffer()
 	/// @param handle the parameter
 	/// @param value the new value for the parameter
 	EXPORTED void rack_param_set_value(void* handle, float value);
+
+	/// set the buffer from which value data will be read for this parmater in
+	/// rack_unit_process().
+	/// it is the host's responsibility to ensure that the buffer contains at least
+	/// num_frames values and to ensure that the buffer stays alive for the duration of
+	/// rack_unit_process(). 
+	/// @param handle the parameter
+	/// @param buffer the buffer
+	EXPORTED void rack_param_set_value_buffer(void* handle, const float* buffer);
 
 	/// @param handle the parameter
 	/// @return the current value of the parameter
@@ -222,6 +233,7 @@ extern "C"
 	/// an input channel can be disabled by setting the input buffer to null. modules
 	/// must support any configuration of enabled/disabled channels
 	/// @param handle the channel
+	/// @param in the buffer
 	/// @return 0 if the specified channel is not an input channel. otherwise 1.
 	EXPORTED char rack_channel_set_input_buffer(void* handle, const float* in);
 
