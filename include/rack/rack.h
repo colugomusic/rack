@@ -45,6 +45,9 @@ Examples of such operations include:
 // modules should return this from rack_get_api_version()
 #define RACK_API_VERSION "0.0.1"
 
+// modules should process audio data in buffers of this size
+#define RACK_VECTOR_SIZE 64
+
 // returned from rack_param_get_format_hint(), indicating the type of a parameter.
 // hosts are free to ignore this hint
 enum Rack_ParamFormatHint
@@ -110,12 +113,17 @@ extern "C"
 	/// @return the name of the unit
 	EXPORTED const char* rack_unit_get_name(void* handle);
 
+	/// clear the unit.
+	/// will most likely be called from an audio thread. module implementers should not  
+	/// perform unbounded operations in this function.
+	/// @param handle the unit
+	EXPORTED void rack_unit_clear(void* handle);
+
 	/// process the unit. 
 	/// will most likely be called from an audio thread. module implementers should not  
 	/// perform unbounded operations in this function.
 	/// @param handle the unit
-	/// @param num_frames the number of frames to process
-	EXPORTED void rack_unit_process(void* handle, int num_frames);
+	EXPORTED void rack_unit_process(void* handle);
 
 	/// @param handle the unit
 	/// @return the current sample rate
@@ -178,8 +186,8 @@ extern "C"
 	/// set the buffer from which value data will be read for this parmater in
 	/// rack_unit_process().
 	/// it is the host's responsibility to ensure that the buffer contains at least
-	/// num_frames values and to ensure that the buffer stays alive for the duration of
-	/// rack_unit_process(). 
+	/// RACK_VECTOR_SIZE values and to ensure that the buffer stays alive for the
+	/// duration of rack_unit_process(). 
 	/// @param handle the parameter
 	/// @param buffer the buffer
 	EXPORTED void rack_param_set_value_buffer(void* handle, const float* buffer);
@@ -228,8 +236,8 @@ extern "C"
 	/// if the specified channel is an input channel, set the buffer from which data will
 	/// be read in rack_unit_process(). 
 	/// it is the host's responsibility to ensure that the buffer contains at least
-	/// num_frames values and to ensure that the buffer stays alive for the duration of
-	/// rack_unit_process(). 
+	/// RACK_VECTOR_SIZE values and to ensure that the buffer stays alive for the duration
+	/// of rack_unit_process(). 
 	/// an input channel can be disabled by setting the input buffer to null. modules
 	/// must support any configuration of enabled/disabled channels
 	/// @param handle the channel
@@ -240,8 +248,8 @@ extern "C"
 	/// if the specified channel is an output channel, set the buffer to which data will
 	/// be written in rack_unit_process(). 
 	/// it is the host's responsibility to ensure that the buffer is large enough to
-	/// hold at least num_frames values and to ensure that the buffer stays alive for the
-	/// duration of rack_unit_process() 
+	/// hold at least RACK_VECTOR_SIZE values and to ensure that the buffer stays alive
+	/// for the duration of rack_unit_process() 
 	/// an output channel can be disabled by setting the output buffer to null. modules
 	/// must support any configuration of enabled/disabled channels
 	/// @param handle the channel
